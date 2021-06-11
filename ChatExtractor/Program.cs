@@ -21,7 +21,7 @@ namespace ChatExtractor
 
         struct Chat
         {
-            public string name, content;
+            public string name, content, time;
         }
 
         static void Main(string[] args)
@@ -77,14 +77,14 @@ namespace ChatExtractor
                         var c = regex.Matches(line);
                         if (c.Count >= 1)
                         {
-                            chats.Add(new Chat {name = c[0].Groups[4].Value, content = c[0].Groups[5].Value});
+                            chats.Add(new Chat {name = c[0].Groups[4].Value, content = c[0].Groups[5].Value, time = c[0].Groups[1].Value});
                         }
                     }
 
                     var log = new Log {name = client, server = server, chats = chats};
 
-                    File.WriteAllText("logs_json" + Path.DirectorySeparatorChar + client + "-" + Path.GetFileNameWithoutExtension(logFile), JsonConvert.SerializeObject(log, Formatting.Indented));
-
+                    File.WriteAllText(
+                        $"logs_json{Path.DirectorySeparatorChar}{client}-{Path.GetFileNameWithoutExtension(logFile)}.json", JsonConvert.SerializeObject(log, Formatting.Indented));
 
                     reader.Close();
                     stream.Close();
